@@ -1,0 +1,46 @@
+<div class="top-area">
+
+	<div class="main-navigation">
+		<div class="user">
+			<p class="username">
+				<ul class="actions">
+					<li><b><%= link_to "<span class='glyphicon glyphicon-user'></span> #{@user.full_name}".html_safe %></b></li>
+					<li><%= link_to "Panel principal", admin_path %></li>
+					<li><%= link_to "Cerrar Sesión", destroy_user_session_path %></li>
+				</ul>
+			</p>				
+		</div>
+		<div class="info">
+			<div class="brand"><%= image_tag('logo.png', size: '50x50') %></div>
+			<div class="details">
+				<p class="company-name"><%= @company.name %></p>
+				<ul class="actions">
+					<%= trucks_stats_for(@company) %>
+					<li><%= link_to "5 alertas".html_safe , nil %></li>
+				</ul>
+			</div>
+		</div>
+		<div id="current">
+			<div class="current instant">
+				<%= image_tag('truck.png', class: 'section-bg') %>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<p class="title"><%= "Volvo Doble Modelo SX" %></p>
+				<p class="near"><%= "Cerca de Matamoros" %></p>
+				
+				<p class="details"><b>Placas: </b><%= "KLM-3423-34" %></p>
+				<p class="data"><%= "Hace 15 minutos" %> - <i><%= "Viajando a 40 km/h" %></i></p>
+				
+				<ul class="actions">
+					<li><%= link_to "<span class='glyphicon glyphicon-globe'></span> Ver en mapa".html_safe , nil %></li>
+					<li><%= link_to "<span class='glyphicon glyphicon-pushpin'></span> Seguir".html_safe , nil %></li>
+				</ul>
+				
+			</div>
+		</div>
+		<div class="search">
+			<%= text_field_tag 'seek', nil, placeholder: 'Buscar por GPS-ID o por placa' %><%= button_tag "<span class='glyphicon glyphicon-search'></span>".html_safe %>
+		</div>
+	</div>
+</div>
+
+<div id="instant-list" class="hidden"></div>

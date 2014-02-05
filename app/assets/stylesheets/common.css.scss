@@ -1,0 +1,30 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600,800);
+
+html, body {
+	width: 100%;
+  height: 100%;
+	margin: 0px;
+	padding: 0px;
+	font-family: 'Open Sans', sans-serif;
+	overflow: hidden;
+	background-color: #E7EBFB;
+}
+
+a, a:hover {
+	text-decoration: none !important;
+}
+
+ul {
+	margin: 0px !important;
+	padding: 0px !important;
+	list-style: none;
+	
+	li {
+		display: inline-block;
+		margin-right: 10px;
+	}
+}
+
+.hidden {
+	display: none;
+}

@@ -1,0 +1,9 @@
+es_MX:
+  app:
+    views:
+      map:
+        trucks:
+          stats:
+            count:
+              one: "1 camión"
+              many: "%{trucks} camiones"
