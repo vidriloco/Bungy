@@ -1,0 +1,18 @@
+es_MX:
+  models:
+    user:
+      name: "Usuario"
+      fields:
+        username: "Nombre de usuario"
+        full_name: "Nombre completo"
+        email: "Correo"
+        password: "Contraseña"
+        password_confirmation: "Confirmación de la contraseña"
+        role: "Rol"
+        company: "Empresa"
+        last_sign_in_at: "Última fecha de inicio de sesión"
+        sign_in_count: "Total de entradas"
+      roles:
+        superuser: "Superusuario"
+        client_admin: "Supervisor"
+        client_owner: "Administrador"
