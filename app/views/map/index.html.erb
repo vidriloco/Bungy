@@ -4,7 +4,7 @@
 		<div class="user">
 			<p class="username">
 				<ul class="actions">
-					<li><b><%= link_to "<span class='glyphicon glyphicon-user'></span> #{@user.full_name}".html_safe %></b></li>
+					<li><b><%= link_to "<span class='glyphicon glyphicon-user'></span> #{@user.username}".html_safe %></b></li>
 					<li><%= link_to "Panel principal", admin_path %></li>
 					<li><%= link_to "Cerrar Sesión", destroy_user_session_path %></li>
 				</ul>
@@ -32,7 +32,6 @@
 				
 				<ul class="actions">
 					<li><%= link_to "<span class='glyphicon glyphicon-globe'></span> Ver en mapa".html_safe , nil %></li>
-					<li><%= link_to "<span class='glyphicon glyphicon-pushpin'></span> Seguir".html_safe , nil %></li>
 				</ul>
 				
 			</div>
