@@ -1,4 +1,7 @@
 es_MX:
+  units:
+    time:
+      minutes: "minutos"
   date:
     abbr_day_names:
     - dom

@@ -56,7 +56,6 @@ gem 'activerecord-postgis-adapter'
 gem 'recurring_select'
 gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
 
-
 gem 'maruku'
 gem 'cancan'
 gem 'apipie-rails'

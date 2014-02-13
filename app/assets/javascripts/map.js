@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	
 	if($.isDefined('#map')) {
 		mapOptions = {
 			center: new google.maps.LatLng(parseFloat(defaultLat), parseFloat(defaultLon)),

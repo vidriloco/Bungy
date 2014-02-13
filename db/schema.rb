@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140131183702) do
+ActiveRecord::Schema.define(version: 20140212172305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "checkpoints", force: true do |t|
+    t.string   "title"
+    t.spatial  "coordinates",     limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.decimal  "expected_timing"
+    t.integer  "route_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "companies", force: true do |t|
     t.string   "name"
@@ -25,7 +34,7 @@ ActiveRecord::Schema.define(version: 20140131183702) do
 
   create_table "gps_units", force: true do |t|
     t.string   "identifier"
-    t.integer  "rmuid"
+    t.string   "rmuid"
     t.text     "details"
     t.integer  "truck_id"
     t.integer  "company_id"
@@ -33,8 +42,8 @@ ActiveRecord::Schema.define(version: 20140131183702) do
     t.datetime "updated_at"
   end
 
-  add_index "gps_units", ["rmuid", "truck_id", "company_id"], :name => "gps_units_unique_assignment", :unique => true
-  add_index "gps_units", ["rmuid"], :name => "gps_units_unique_identifier", :unique => true
+  add_index "gps_units", ["identifier", "truck_id", "company_id"], :name => "gps_units_unique_assignment", :unique => true
+  add_index "gps_units", ["identifier"], :name => "gps_units_unique_identifier", :unique => true
 
   create_table "instants", force: true do |t|
     t.spatial  "coordinates",      limit: {:srid=>4326, :type=>"point", :geographic=>true}
@@ -59,6 +68,14 @@ ActiveRecord::Schema.define(version: 20140131183702) do
   end
 
   add_index "rails_admin_histories", ["item", "table", "month", "year"], :name => "index_rails_admin_histories"
+
+  create_table "routes", force: true do |t|
+    t.string   "name"
+    t.text     "details"
+    t.integer  "company_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "trucks", force: true do |t|
     t.string   "plate"
@@ -89,5 +106,6 @@ ActiveRecord::Schema.define(version: 20140131183702) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["username", "company_id"], :name => "index_users_on_username_and_company_id", :unique => true
 
 end

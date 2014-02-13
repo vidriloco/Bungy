@@ -1,5 +1,23 @@
 es_MX:
   models:
+    route:
+      name: "Ruta"
+      fields:
+        name: "Nombre"
+        details: "Detalles"
+        company: "Empresa"
+        created_at: "Creada el"
+    checkpoint:
+      name: "Checkpoint"
+      fields:
+        title: "Punto"
+        expected_timing: "Timing"
+        expected_timing_help: "Debe estar dado en minutos"
+        latitude: "Latitud"
+        longitude: "Longitud"
+        route: "Ruta"
+        map_: "Mapa"
+        map: "Selecciona las coordenadas para este punto"
     user:
       name: "Usuario"
       fields:

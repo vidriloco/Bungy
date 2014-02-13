@@ -17,9 +17,14 @@ class User < ActiveRecord::Base
   end
   
   def role_enum
+    User.roles_for_user(self)
+  end
+  
+  def self.roles_for_user(user)
     trans_roles = User.roles.to_a.map { |ro| [I18n.t("models.user.roles.#{ro[0]}"), ro[1]]  }
-    return trans_roles if has_role?(:superuser)
-    trans_roles[1,2]
+    return trans_roles[1,2] if user.has_role?(:client_owner)
+    return [trans_roles.last] if user.has_role?(:client_admin)
+    trans_roles
   end
   
   private
@@ -72,8 +77,12 @@ class User < ActiveRecord::Base
         label I18n.t('models.user.fields.full_name')
       end
       
-      field :role do
+      field :role, :enum do
         label I18n.t('models.user.fields.role')
+        
+        enum do
+          User.roles_for_user(bindings[:view].current_user)
+        end
       end
       
       field :email do
