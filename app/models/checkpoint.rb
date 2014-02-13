@@ -3,10 +3,10 @@ class Checkpoint < ActiveRecord::Base
   
   belongs_to :route
   
-  validates :route, :title, :timing, :presence => true
-  attr_accessor :lat, :lon, :map
+  validates :route, :title, :expected_timing, :presence => true
+  attr_accessor :lat, :lon
   
-  before_save :apply_coordinates
+  before_validation :apply_coordinates
   
   def apply_coordinates
     self.apply_geo({"lon" => lon, "lat" => lat})
@@ -21,11 +21,13 @@ class Checkpoint < ActiveRecord::Base
   end
   
   def lat
-    coordinates.lat unless coordinates.nil?
+    return @lat unless @lat.nil?
+    return coordinates.lat unless coordinates.nil?
   end
   
   def lon
-    coordinates.lon unless coordinates.nil?
+    return @lon unless @lon.nil?
+    return coordinates.lon unless coordinates.nil?
   end
   
   private
@@ -71,11 +73,6 @@ class Checkpoint < ActiveRecord::Base
       
       field :route do 
         label I18n.t('models.checkpoint.fields.route')
-      end
-      
-      field :map do
-        help I18n.t('models.checkpoint.fields.map_')
-        partial 'checkpoints/admin/map'
       end
       
       field :lat do 
