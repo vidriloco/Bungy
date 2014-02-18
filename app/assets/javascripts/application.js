@@ -14,6 +14,8 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require turbolinks
+//= require path
 //= require concerns/extensions
 //= require concerns/gmap
+//= require concerns/core
 //= require map

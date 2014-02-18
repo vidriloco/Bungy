@@ -50,6 +50,17 @@
 				box-shadow: 0 0 5px #D8D8D8;
 			}
 			
+			.search {
+				.content {
+					margin: 10px;
+					padding: 10px;
+					
+					span {
+						margin-right: 30px;
+					}
+				}
+			}
+			
 			.current  {
 				padding: 15px;
 				overflow: hidden;

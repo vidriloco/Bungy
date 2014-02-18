@@ -17,31 +17,15 @@ $(document).ready(function() {
 		map = new ViewComponents.Map(new google.maps.Map(document.getElementById("map"), mapOptions), {
 			coordinatesDom: "#coordinates"
 		});
-
-		var updateHeading = function() {
-			$.ajax({
-				url: '/heading.js',
-				success: updateMapObjects,
-				dataType: 'script'
-			});
-		}
-		
-		var updateMapObjects = function() {
-			var trucks = $('#instant-list').children();
-			
-			map.resetMarkersList();
-			for(idx = 0 ; idx < trucks.length ; idx++) {
-				var lat = parseFloat($(trucks[idx]).attr('data-lat'));
-				var lon = parseFloat($(trucks[idx]).attr('data-lng'));
-				var idD = $(trucks[idx]).attr('id');
 				
-				map.addCoordinatesAsMarkerToList({ lat: lat, lon: lon, iconName: 'shipment', resourceUrl: idD }, function(opts) {
-					//itemUrlSwitch($('.listing-view #'+opts["resourceUrl"]), opts["resourceUrl"]);
-				});
-			}
-		}
-		
-		setInterval(updateHeading, 10000);
 	}
-
+	
+	if($.isDefined('#tracking')) {		
+		var core = new Core(map);
+		Path.map("#/").to(core.onIndex);
+		Path.map("#/gps/:gps_unit").to(core.onGPS);
+		Path.map("#/instant/:id").to(core.onInstant);
+		Path.root("#/");
+		Path.listen();
+	}
 });
