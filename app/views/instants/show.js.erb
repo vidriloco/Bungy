@@ -1,0 +1,6 @@
+if($('#instant-list').is(':empty')) {
+	$('#instant-list').html('');
+	$('#instant-list').html("<%= escape_javascript(render @instant) %>");
+} else {
+	$('#instant-<%= @instant.id %>').replaceWith("<%= escape_javascript(render @instant) %>");
+}

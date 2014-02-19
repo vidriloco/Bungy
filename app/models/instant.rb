@@ -1,13 +1,50 @@
 class Instant < ActiveRecord::Base
   include Geography
+  attr_accessor :lat, :lon
   
+  before_validation :apply_coordinates
   belongs_to :gps_unit
+  
+  def apply_coordinates
+    self.apply_geo({"lon" => lon, "lat" => lat})
+  end
+  
+  def lat
+    return @lat unless @lat.nil?
+    return coordinates.lat unless coordinates.nil?
+  end
+  
+  def lon
+    return @lon unless @lon.nil?
+    return coordinates.lon unless coordinates.nil?
+  end
   
   def self.convert_to_signed_twos_complement(integer_value, num_of_bits)
     length       = num_of_bits
     mid          = 2**(length-1)
     max_unsigned = 2**length
     (integer_value >= mid) ? integer_value - max_unsigned : integer_value
+  end
+  
+  rails_admin do 
+    label do
+      I18n.t('models.instant.name')
+    end
+    
+    edit do
+      include_fields :speed, :gps_unit, :heading, :measurement_time, :altitude
+      
+      field :lat do 
+        label I18n.t('models.checkpoint.fields.latitude')
+        help I18n.t('admin.form.required')
+      end
+      
+      field :lon do
+        label I18n.t('models.checkpoint.fields.longitude')
+        help I18n.t('admin.form.required')
+      end
+    end
+    
   end
   
   def self.parse_plot(data)
@@ -57,8 +94,10 @@ class Instant < ActiveRecord::Base
             :altitude => altitude, 
             :speed => speed, 
             :heading => heading, 
-            :measurement_time => DateTime.new(year, month, day, hours, minutes, seconds))
-          instant.apply_geo({"lon" => longitude, "lat" => latitude})
+            :measurement_time => DateTime.new(year, month, day, hours, minutes, seconds),
+            :lat => latitude, 
+            :lon => longitude)
+          #instant.apply_geo({"lon" => longitude, "lat" => latitude})
           instant.save
         end  
       # Programming data mode

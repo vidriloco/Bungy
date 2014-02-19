@@ -28,11 +28,11 @@ Core = function(map) {
 	
 	var willFetchUpdate = function(callback) {
 		var url;
-		//if(currentState.mode == Modes.Collection) {
-			url = '/heading.js';
-		//} else {
-			//url = '/heading/'+currentState.gpsUnit+'.js';
-		//}
+		if(currentState.mode == Modes.Collection) {
+			url = '/instants.js';
+		} else {
+			url = '/instants/'+currentState.gpsUnit+'.js';
+		}
 		
 		$.ajax({
 			url: url,

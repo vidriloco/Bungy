@@ -9,7 +9,8 @@ Bungy::Application.routes.draw do
   root 'map#index'
   
   get 'admin' => 'admin#index'
-  get 'heading' => 'map#heading'
+  get 'instants' => 'instants#index'
+  get 'instants/:id' => 'instants#show'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
