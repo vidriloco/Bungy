@@ -8,9 +8,15 @@ Core = function(map) {
 	var initialize = function(map) {
 		this.map = map;
 		this.geocoder = geocoder = new google.maps.Geocoder();
-		$(document).on( "click", '#close-panel', function() {
+		$(document).on("click", '#close-panel', function() {
 			itemUrlSwitch();
 		});
+		
+		$('#select_tag').bind('change', function() {
+			var selected = $('#select_tag option:selected').text();
+			window.location.hash="#/gps/"+selected;
+		});
+		
 		setInterval(willFetchUpdate, 10000);
 	}
 	
