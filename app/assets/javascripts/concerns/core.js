@@ -14,8 +14,11 @@ Core = function(map) {
 		
 		$('#select_tag').bind('change', function() {
 			var selected = $('#select_tag option:selected').text();
-			if($('*[data-gps-id='+selected+']') != undefined) {
-				map.placeViewportAt({lat: $('*[data-gps-id='+selected+']').attr('data-lat'), lon: $('*[data-gps-id='+selected+']').attr('data-lng'), zoom: 16 });
+			
+			if(selected.length > 0 && $('*[data-gps-id='+selected+']') != undefined) {
+				if($('*[data-gps-id='+selected+']').attr('data-lat') != undefined) {
+					map.placeViewportAt({lat: $('*[data-gps-id='+selected+']').attr('data-lat'), lon: $('*[data-gps-id='+selected+']').attr('data-lng'), zoom: 16 });
+				}
 			}
 		});
 		
@@ -35,6 +38,7 @@ Core = function(map) {
 	}
 	
 	var willFetchUpdate = function(callback) {
+		$('.spacer .loading-message').fadeIn(2000);
 		var url;
 		if(currentState.mode == Modes.Collection) {
 			url = '/instants.js';
@@ -61,6 +65,7 @@ Core = function(map) {
 			map.writeAddressOn(new google.maps.LatLng(domReferenceToCurrentMember().attr('data-lat'), domReferenceToCurrentMember().attr('data-lng')));
 		}
 		updateMapObjects();
+		$('.spacer .loading-message').fadeOut(3000);
 	}
 	
 	var makePanelAppear = function() {

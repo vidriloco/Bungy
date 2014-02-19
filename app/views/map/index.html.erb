@@ -1,7 +1,8 @@
 <div id="tracking"></div>
 <div class="top-area">
-
 	<div class="main-navigation">
+		<div class="spacer"><p class="loading-message">Actualizando ...</p></div>
+		
 		<div class="user">
 			<p class="username">
 				<ul class="actions">
@@ -24,7 +25,7 @@
 		<div id="current"></div>
 		<div class="search">
 			<div class="content">
-				<span>Centrar mapa en GPS: </span> <%= select_tag 'select_tag', options_from_collection_for_select(current_user.company.gps_units, "id", "identifier") %>
+				<span>Centrar mapa en GPS: </span> <%= select_tag 'select_tag', options_from_collection_for_select(current_user.company.gps_units, "id", "identifier"), :prompt => "" %>
 			</div>
 			<% if '1'==1 %>
 			<%= text_field_tag 'seek', nil, placeholder: 'Buscar por GPS-ID o por placa' %><%= button_tag "<span class='glyphicon glyphicon-search'></span>".html_safe %>

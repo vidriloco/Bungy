@@ -41,6 +41,21 @@
 			right: 10px;
 			float: right;
 			
+			.spacer {
+				height: 35px;
+				width: 130px;
+				.loading-message {
+					border-radius: 2.5px;
+					background: #005CEB;
+					color: white;
+					text-shadow: 2px black;
+					padding: 5px;
+					font-weight: bold;
+					text-align: center;
+					font-size: 12px;
+				}
+			}
+			
 			.info, .search, .current, .user {
 				background-color: white;
 				border-radius: 3px;
