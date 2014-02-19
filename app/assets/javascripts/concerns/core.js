@@ -14,7 +14,9 @@ Core = function(map) {
 		
 		$('#select_tag').bind('change', function() {
 			var selected = $('#select_tag option:selected').text();
-			window.location.hash="#/gps/"+selected;
+			if($('*[data-gps-id='+selected+']') != undefined) {
+				map.placeViewportAt({lat: $('*[data-gps-id='+selected+']').attr('data-lat'), lon: $('*[data-gps-id='+selected+']').attr('data-lng'), zoom: 16 });
+			}
 		});
 		
 		setInterval(willFetchUpdate, 10000);
@@ -84,6 +86,7 @@ Core = function(map) {
 	this.onIndex = function() {
 		currentState.mode = Modes.Collection;
 		$('#current').html('');
+		willFetchUpdate();
 	}
 	
 	this.onInstant = function() {
