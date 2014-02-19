@@ -3,9 +3,11 @@ Core = function(map) {
 	
 	var map;
 	var currentState = { mode: Modes.Collection, gpsUnit: null };
+	var geocoder;
 	
 	var initialize = function(map) {
 		this.map = map;
+		this.geocoder = geocoder = new google.maps.Geocoder();
 		$(document).on( "click", '#close-panel', function() {
 			itemUrlSwitch();
 		});
@@ -48,6 +50,7 @@ Core = function(map) {
 		if(currentState.mode == Modes.Member) {
 			makePanelAppear();
 			map.placeViewportAt({lat: domReferenceToCurrentMember().attr('data-lat'), lon: domReferenceToCurrentMember().attr('data-lng') });
+			map.writeAddressOn(new google.maps.LatLng(domReferenceToCurrentMember().attr('data-lat'), domReferenceToCurrentMember().attr('data-lng')));
 		}
 		updateMapObjects();
 	}

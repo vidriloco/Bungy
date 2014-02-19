@@ -2,6 +2,9 @@ es_MX:
   units:
     time:
       minutes: "minutos"
+      ago: "hace"
+    distance:
+      nearby: "cerca de "
   date:
     abbr_day_names:
     - dom

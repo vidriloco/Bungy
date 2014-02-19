@@ -1,13 +1,9 @@
 <div id="instant-<%= instant.id %>" class="current instant" data-gps-id="<%= instant.gps_unit.identifier %>" data-lng="<%= instant.lon %>" data-lat="<%= instant.lat %>">
 	<%= image_tag('truck.png', class: 'section-bg') %>
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true" id="close-panel">&times;</button>
-	<p class="title"><%= "Volvo Doble Modelo SX" %></p>
-	<p class="near"><%= "Cerca de Matamoros" %></p>
+	<p class="title"><%= instant.gps_unit.truck.name %></p>	
+	<p class="details"><b><%= t('models.truck.plate')%>: </b><%= instant.gps_unit.truck.plate %></p>
+	<p class="data"><%= t('units.time.ago') %> <%= distance_of_time_in_words_to_now(instant.created_at) %> - <i><%= "Viajando a #{instant.speed} km/h" %></i></p>
 	
-	<p class="details"><b>Placas: </b><%= "KLM-3423-34" %></p>
-	<p class="data"><%= "Hace 15 minutos" %> - <i><%= "Viajando a 40 km/h" %></i></p>
-	
-	<ul class="actions">
-		<li><%= link_to "<span class='glyphicon glyphicon-globe'></span> Ver en mapa".html_safe , nil %></li>
-	</ul>
+	<p class="near"><b><%= t('units.distance.nearby' ) %>:</b> <span class="address"></span></p>
 </div>

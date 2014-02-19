@@ -15,7 +15,8 @@ $(document).ready(function() {
 		};
 
 		map = new ViewComponents.Map(new google.maps.Map(document.getElementById("map"), mapOptions), {
-			coordinatesDom: "#coordinates"
+			coordinatesDom: "#coordinates",
+			addressDom: "#current .address"
 		});
 				
 	}
