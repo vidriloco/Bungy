@@ -9,7 +9,10 @@ namespace :gps do
        end
 
        def receive_data data
-        Instant.parse_plot(data)
+        response_header = Instant.parse_plot(data)
+        
+        p response_header
+        send_data(response_header)
        end
        
        def bind
@@ -28,3 +31,4 @@ namespace :gps do
   end
 
 end
+

@@ -5,6 +5,8 @@ class Instant < ActiveRecord::Base
   before_validation :apply_coordinates
   belongs_to :gps_unit
   
+  #after_save :register_tracking
+  
   def apply_coordinates
     self.apply_geo({"lon" => lon, "lat" => lat})
   end
@@ -17,6 +19,10 @@ class Instant < ActiveRecord::Base
   def lon
     return @lon unless @lon.nil?
     return coordinates.lon unless coordinates.nil?
+  end
+  
+  def register_tracking
+    Tracking.register(self)
   end
   
   def self.convert_to_signed_twos_complement(integer_value, num_of_bits)
@@ -51,8 +57,9 @@ class Instant < ActiveRecord::Base
     # IP Message Mode
     if data[0,4] == 'MCGP'
       mode = data[4].unpack('C*').first
-      p "MODE: #{mode}"
-
+      transmission_reason = data[18].unpack("C*").first
+      transmission_reason_specific = data[17].unpack("C*").first
+      
       # Status location mode
       if mode == 0
         unit_id = "#{data[5]}#{data[6]}#{data[7]}#{data[8]}".unpack("H*").first
@@ -87,7 +94,7 @@ class Instant < ActiveRecord::Base
         year = year.scan(/../).reverse.join.to_i( 16 ) 
         
         gps_unit = GpsUnit.where(:identifier => unit_id.to_s).first
-        p gps_unit
+        
         unless gps_unit.blank?
           instant = Instant.new(
             :gps_unit_id => gps_unit.id, 
@@ -96,8 +103,9 @@ class Instant < ActiveRecord::Base
             :heading => heading, 
             :measurement_time => DateTime.new(year, month, day, hours, minutes, seconds),
             :lat => latitude, 
-            :lon => longitude)
-          #instant.apply_geo({"lon" => longitude, "lat" => latitude})
+            :lon => longitude,
+            :transmission_reason => transmission_reason,
+            :transmission_reason_specific_data => transmission_reason_specific)
           instant.save
         end  
       # Programming data mode
@@ -108,12 +116,36 @@ class Instant < ActiveRecord::Base
     elsif data[0,4] == 'MCGS' 
       
     end
+    
+    header_request = data[0,8]
+    header_request[4] = [4].pack("C*")
+    
+    command_numerator = [0].pack("C*")
+    auth_code = [0,0,0,0].pack("C*")
+    action_code = [0].pack("C*")
+    #main_ack_lsb = [data[11].unpack("b*")[0][0,4].to_i].pack("C*")
+    #main_ack_msb = [data[11].unpack("B*")[0][0,4].to_i].pack("C*")
+    main_ack_lsb = [0].pack("C*")
+    main_ack_msb = [1].pack("C*")
+    seco_ack_duo = [0,0].pack("C*")
+    reserved = ([0]*8).pack("C*")
+    p "#{data[11]}"
+    #p "#{(data[11] & 0x0F)}"
+    # HR: byte 1-9 | CNF: byte 10 | AC: byte 11-14 | ACTC: 15 |
+    pre_response = header_request+command_numerator+auth_code+action_code+main_ack_lsb+main_ack_msb+seco_ack_duo+reserved
+    
+    pre_response+[pre_response[4,27].unpack("C*").inject(0) { |cu, co| co+=cu }].pack("C*")
   end
+  
+  #00 00 00 00 00 00 02 00 00 00 00 0E A1 52 EB 80 00 00 63 
+  #02 00 00 00 00 00
+  #00 00 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 D1 
   
   def self.all_for(company)
     instants = []
     company.gps_units.each do |unit|
-      instants << unit.instants.order(measurement_time: :desc).first
+      instant = unit.instants.order(measurement_time: :desc).first
+      instants << instant unless instant.nil?
     end
     instants
   end

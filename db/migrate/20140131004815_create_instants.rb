@@ -7,6 +7,8 @@ class CreateInstants < ActiveRecord::Migration
       t.decimal         :heading
       t.datetime        :measurement_time
       t.decimal         :altitude
+      t.integer         :transmission_reason
+      t.integer         :transmission_reason_specific_data
       t.timestamps
     end
   end

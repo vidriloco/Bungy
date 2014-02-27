@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140212172305) do
+ActiveRecord::Schema.define(version: 20140219055723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20140212172305) do
   create_table "checkpoints", force: true do |t|
     t.string   "title"
     t.spatial  "coordinates",     limit: {:srid=>4326, :type=>"point", :geographic=>true}
-    t.decimal  "expected_timing"
+    t.integer  "expected_timing"
     t.integer  "route_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -46,12 +46,14 @@ ActiveRecord::Schema.define(version: 20140212172305) do
   add_index "gps_units", ["identifier"], :name => "gps_units_unique_identifier", :unique => true
 
   create_table "instants", force: true do |t|
-    t.spatial  "coordinates",      limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.spatial  "coordinates",                       limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.decimal  "speed"
     t.integer  "gps_unit_id"
     t.decimal  "heading"
     t.datetime "measurement_time"
     t.decimal  "altitude"
+    t.integer  "transmission_reason"
+    t.integer  "transmission_reason_specific_data"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -77,10 +79,21 @@ ActiveRecord::Schema.define(version: 20140212172305) do
     t.datetime "updated_at"
   end
 
+  create_table "trackings", force: true do |t|
+    t.integer  "route_id"
+    t.integer  "truck_id"
+    t.integer  "checkpoint_id"
+    t.boolean  "alert"
+    t.integer  "timing"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "trucks", force: true do |t|
     t.string   "plate"
     t.string   "name"
     t.integer  "company_id"
+    t.integer  "route_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
