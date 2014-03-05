@@ -107,6 +107,7 @@ class Instant < ActiveRecord::Base
             :transmission_reason => transmission_reason,
             :transmission_reason_specific_data => transmission_reason_specific)
           instant.save
+          #p "Instant saved at #{instant.created_at.to_s} with GPS unit: #{gps_unit.identifier}"
         end  
       # Programming data mode
       elsif mode == 1
@@ -123,13 +124,16 @@ class Instant < ActiveRecord::Base
     command_numerator = [0].pack("C*")
     auth_code = [0,0,0,0].pack("C*")
     action_code = [0].pack("C*")
-    #main_ack_lsb = [data[11].unpack("b*")[0][0,4].to_i].pack("C*")
-    #main_ack_msb = [data[11].unpack("B*")[0][0,4].to_i].pack("C*")
-    main_ack_lsb = [0].pack("C*")
-    main_ack_msb = [1].pack("C*")
+    
+    p "HEX: #{data[11]} DEC: #{data[11].unpack("C*")} MSB: #{data[11].unpack("B")[0].to_i} LSB: #{data[11].unpack("b")[0].to_i}"
+    
+    main_ack_msb = [data[11].unpack("b")[0].to_i].pack("C*")
+    main_ack_lsb = [data[11].unpack("B")[0].to_i].pack("C*")
+    #main_ack_lsb = [0].pack("C*")
+    #main_ack_msb = [1].pack("C*")
     seco_ack_duo = [0,0].pack("C*")
     reserved = ([0]*8).pack("C*")
-    p "#{data[11]}"
+    
     #p "#{(data[11] & 0x0F)}"
     # HR: byte 1-9 | CNF: byte 10 | AC: byte 11-14 | ACTC: 15 |
     pre_response = header_request+command_numerator+auth_code+action_code+main_ack_lsb+main_ack_msb+seco_ack_duo+reserved
@@ -144,7 +148,7 @@ class Instant < ActiveRecord::Base
   def self.all_for(company)
     instants = []
     company.gps_units.each do |unit|
-      instant = unit.instants.order(measurement_time: :desc).first
+      instant = unit.instants.last
       instants << instant unless instant.nil?
     end
     instants
