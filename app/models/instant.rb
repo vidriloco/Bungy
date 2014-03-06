@@ -125,10 +125,10 @@ class Instant < ActiveRecord::Base
     auth_code = [0,0,0,0].pack("C*")
     action_code = [0].pack("C*")
     
-    p "HEX: #{data[11]} DEC: #{data[11].unpack("C*")} MSB: #{data[11].unpack("B")[0].to_i} LSB: #{data[11].unpack("b")[0].to_i}"
+    p "BIN: #{data[11].unpack("B")[0]} HEX: #{data[11]} DEC: #{data[11].unpack("C*")} MSB: #{data[11].unpack("B")[0].to_i} LSB: #{data[11].unpack("b")[0].to_i}"
     
-    main_ack_msb = [data[11].unpack("b")[0].to_i].pack("C*")
-    main_ack_lsb = [data[11].unpack("B")[0].to_i].pack("C*")
+    main_ack_lsb = [0].pack("C*")
+    main_ack_msb = data[11]
     #main_ack_lsb = [0].pack("C*")
     #main_ack_msb = [1].pack("C*")
     seco_ack_duo = [0,0].pack("C*")
