@@ -61,7 +61,7 @@ class Instant < ActiveRecord::Base
       transmission_reason_specific = data[17].unpack("C*").first
       
       # Status location mode
-      if mode == 0
+      if(mode == 0 || mode == 8)
         unit_id = "#{data[5]}#{data[6]}#{data[7]}#{data[8]}".unpack("H*").first
         unit_id = unit_id.scan(/../).reverse.join.to_i( 16 ) 
         
@@ -109,6 +109,33 @@ class Instant < ActiveRecord::Base
           instant.save
           #p "Instant saved at #{instant.created_at.to_s} with GPS unit: #{gps_unit.identifier}"
         end  
+        
+        # Prepare ack
+        
+        header_request = data[0,8]
+        header_request[4] = [4].pack("C*")
+
+        command_numerator = [0].pack("C*")
+        auth_code = [0,0,0,0].pack("C*")
+        action_code = [0].pack("C*")
+
+        p "BIN: #{data[11].unpack("B")[0]} HEX: #{data[11]} DEC: #{data[11].unpack("C*")} MSB: #{data[11].unpack("B")[0].to_i} LSB: #{data[11].unpack("b")[0].to_i}"
+
+        main_ack_lsb = [0].pack("C*")
+        main_ack_msb = data[11]
+        #main_ack_lsb = [0].pack("C*")
+        #main_ack_msb = [1].pack("C*")
+        seco_ack_duo = [0,0].pack("C*")
+        reserved = ([0,0,0,0,0,0,0,0,0]).pack("C*")
+
+        #p "#{(data[11] & 0x0F)}"
+        # HR: byte 1-9 | CNF: byte 10 | AC: byte 11-14 | ACTC: 15 |
+        pre_response = header_request+command_numerator+auth_code+action_code+main_ack_lsb+main_ack_msb+seco_ack_duo+reserved
+
+        ack=pre_response+[pre_response[4,27].unpack("C*").inject(0) { |cu, co| co+=cu }].pack("C*")
+        
+        p ack
+        ack
       # Programming data mode
       elsif mode == 1
         
@@ -117,28 +144,6 @@ class Instant < ActiveRecord::Base
     elsif data[0,4] == 'MCGS' 
       
     end
-    
-    header_request = data[0,8]
-    header_request[4] = [4].pack("C*")
-    
-    command_numerator = [0].pack("C*")
-    auth_code = [0,0,0,0].pack("C*")
-    action_code = [0].pack("C*")
-    
-    p "BIN: #{data[11].unpack("B")[0]} HEX: #{data[11]} DEC: #{data[11].unpack("C*")} MSB: #{data[11].unpack("B")[0].to_i} LSB: #{data[11].unpack("b")[0].to_i}"
-    
-    main_ack_lsb = [0].pack("C*")
-    main_ack_msb = data[11]
-    #main_ack_lsb = [0].pack("C*")
-    #main_ack_msb = [1].pack("C*")
-    seco_ack_duo = [0,0].pack("C*")
-    reserved = ([0]*8).pack("C*")
-    
-    #p "#{(data[11] & 0x0F)}"
-    # HR: byte 1-9 | CNF: byte 10 | AC: byte 11-14 | ACTC: 15 |
-    pre_response = header_request+command_numerator+auth_code+action_code+main_ack_lsb+main_ack_msb+seco_ack_duo+reserved
-    
-    pre_response+[pre_response[4,27].unpack("C*").inject(0) { |cu, co| co+=cu }].pack("C*")
   end
   
   #00 00 00 00 00 00 02 00 00 00 00 0E A1 52 EB 80 00 00 63 
